@@ -28,7 +28,7 @@ async (req, res) => {
     return res.status(400).json({ errors: errors.array() })
   }
 
-  // take out name, email and password from the req body
+  // take out (destructure) name, email and password from the req body
   const { name, email, password } = req.body;
 
   try {
