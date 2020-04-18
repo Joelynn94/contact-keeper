@@ -85,6 +85,7 @@ async (req, res) => {
   } catch (err) {
     // gives us a clear message of what is wrong
     console.error(err.message);
+    // send status of 500 (server erro) and send a message
     res.status(500).send('Server error')
   }
 
