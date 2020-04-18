@@ -1,7 +1,9 @@
-const express = require('express')
-const router = express.Router()
-const bcrypt = require('bcryptjs')
-const { check, validationResult } = require('express-validator')
+const express = require('express');
+const router = express.Router();
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('config')
+const { check, validationResult } = require('express-validator');
 
 const User = require('../models/User')
 
@@ -58,7 +60,28 @@ async (req, res) => {
     // save the user in the database
     await user.save()
 
-    res.send('User saved')
+    // create payload - this is the object you want to send in the token
+    const payload = {
+      user: {
+        id: user.id
+      }
+    }
+
+    // .sign() takes in a couple parameters 
+    // first one is the payload 
+    // second is the jwt secrect - get the jwt secret from config
+    // next parameter is a object of options 
+    jwt.sign(payload, config.get('jwtSecret'), {
+      // when the jwt token exipres 
+      expiresIn: 360000
+      // then we need a callabck function
+    }, (err, token) => {
+      // if an error occurs - throw the error
+      if (err) throw err;
+      // this is a json object that will return the token 
+      res.json({ token })
+    })
+
   } catch (err) {
     // gives us a clear message of what is wrong
     console.error(err.message);
