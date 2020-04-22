@@ -2,6 +2,7 @@ import React, { useReducer } from 'react'
 import axios from 'axios'
 import AuthContext from './authContext'
 import authReducer from './authReducer'
+import setAuthToken from '../../utils/setAuthToken'
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
@@ -29,8 +30,25 @@ const AuthState = props => {
   const [state, dispatch] = useReducer(authReducer, initialState)
 
   // load user 
-  const loadUser = () => {
-    console.log('load user')
+  const loadUser = async () => {
+    // load token into gloab headers 
+    if(localStorage.token) {
+      setAuthToken(localStorage.token)
+    }
+
+    try {
+      const response = await axios.get('/api/auth')
+
+      dispatch({
+        type: USER_LOADED,
+        // actual user data
+        payload: response.data
+      })
+    } catch (err) {
+      dispatch({
+        type: AUTH_ERROR
+      })
+    }
   }
 
   // register user 
@@ -52,6 +70,9 @@ const AuthState = props => {
         type: REGISTER_SUCCESS,
         payload: response.data
       })
+
+      // get the user from the backend
+      loadUser()
     } catch (err) {
       // if there is an error 
       // send the err.response data  - with a message (msg)

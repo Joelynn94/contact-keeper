@@ -11,6 +11,13 @@ import {
 
 export default (state, action) => {
   switch(action.type) {
+    case USER_LOADED: 
+      return {
+        ...state,
+        isAuthenticated: true,
+        loading: false,
+        user: action.payload
+      }
     case REGISTER_SUCCESS:
       // put the token we get back - inside of localstorage
       // we want to set a item called token and we want to get it from action.payload which is the object 
@@ -24,6 +31,7 @@ export default (state, action) => {
         loading: false
       };
     case REGISTER_FAIL:
+    case AUTH_ERROR:
       // remove the token form localstorage on any failed register
       localStorage.removeItem('token')
       return {
