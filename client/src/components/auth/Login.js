@@ -36,7 +36,7 @@ function Login() {
             type="text"
             name="email"
             value={email}
-            onChnage={onChange}
+            onChange={onChange}
           />
         </div>
         <div className="form-group">
@@ -45,7 +45,7 @@ function Login() {
             type="text"
             name="password"
             value={password}
-            onChnage={onChange}
+            onChange={onChange}
           />
         </div>
         <input 
