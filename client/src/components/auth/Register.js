@@ -1,10 +1,22 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import AlertContext from '../../context/alert/alertContext'
+import AuthContext from '../../context/auth/authContext'
 
 function Register() {
   const alertContext = useContext(AlertContext)
+  const authContext = useContext(AuthContext)
 
   const { setAlert } = alertContext
+  const { register, error, clearErrors } = authContext
+
+  useEffect(() => {
+    // checking to see if the error message matches 
+    if(error === 'User already exists') {
+      setAlert(error, 'danger')
+      clearErrors()
+    } 
+    // error is a dependancy for this useEffect hook
+  }, [error])
 
   // set inital state 
   const [user, setUser] = useState({
@@ -33,7 +45,12 @@ function Register() {
     } else if (password !== password2) {
       setAlert('Passwords do not match', 'danger')
     } else {
-      console.log('Register submit')
+      // register takes in the form data 
+      register({
+        name,
+        email,
+        password
+      })
     }
   }
 
@@ -66,7 +83,7 @@ function Register() {
         <div className="form-group">
           <label htmlFor="password">Password</label>
           <input 
-            type="text"
+            type="password"
             name="password"
             value={password}
             onChange={onChange}
@@ -77,7 +94,7 @@ function Register() {
         <div className="form-group">
           <label htmlFor="password2">Confirm Password</label>
           <input 
-            type="text"
+            type="password"
             name="password2"
             value={password2}
             onChange={onChange}

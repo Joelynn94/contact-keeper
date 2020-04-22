@@ -1,4 +1,5 @@
 import React, { useReducer } from 'react'
+import axios from 'axios'
 import AuthContext from './authContext'
 import authReducer from './authReducer'
 import {
@@ -28,14 +29,56 @@ const AuthState = props => {
   const [state, dispatch] = useReducer(authReducer, initialState)
 
   // load user 
+  const loadUser = () => {
+    console.log('load user')
+  }
 
   // register user 
+  const register = async formData => {
+    // axios config object - with the headers you want to include 
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+
+    try {
+      // response will return a promise 
+      // which takes in the url, the formData and the config object
+      const response = await axios.post('/api/users', formData, config)
+      // dispatch to the reducer with the type and payload
+      // payload in the response - which is the token
+      dispatch({
+        type: REGISTER_SUCCESS,
+        payload: response.data
+      })
+    } catch (err) {
+      // if there is an error 
+      // send the err.response data  - with a message (msg)
+      dispatch({
+        type: REGISTER_FAIL,
+        payload: err.response.data.masg
+      })
+      
+    }
+  }
 
   // login user 
+  const login = () => {
+    console.log('load user')
+  }
 
   // logout 
+  const logout = () => {
+    console.log('load user')
+  }
 
-  // clear erros 
+  // clear errors 
+  const clearErrors = () => {
+    dispatch({
+      type: CLEAR_ERRORS
+    })
+  }
 
   // return our provider to wrap the application
   return (
@@ -50,6 +93,11 @@ const AuthState = props => {
         user: state.user,
         error: state.error,
         // methods used 
+        register,
+        loadUser,
+        login,
+        logout,
+        clearErrors
       }}
     >
       {props.children}
