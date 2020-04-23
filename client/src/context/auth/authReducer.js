@@ -18,7 +18,9 @@ export default (state, action) => {
         loading: false,
         user: action.payload
       }
+    // both login and register return a token
     case REGISTER_SUCCESS:
+    case LOGIN_SUCCESS:
       // put the token we get back - inside of localstorage
       // we want to set a item called token and we want to get it from action.payload which is the object 
       localStorage.setItem('token', action.payload.token)
@@ -32,6 +34,8 @@ export default (state, action) => {
       };
     case REGISTER_FAIL:
     case AUTH_ERROR:
+    case LOGIN_FAIL:
+    case LOGOUT:
       // remove the token form localstorage on any failed register
       localStorage.removeItem('token')
       return {

@@ -85,13 +85,43 @@ const AuthState = props => {
   }
 
   // login user 
-  const login = () => {
-    console.log('load user')
+  const login = async formData => {
+    // axios config object - with the headers you want to include 
+    const config = {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+
+    try {
+      // response will return a promise 
+      // which takes in the url, the formData and the config object
+      const response = await axios.post('/api/auth', formData, config)
+      // dispatch to the reducer with the type and payload
+      // payload in the response - which is the token
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: response.data
+      })
+
+      // get the user from the backend
+      loadUser()
+    } catch (err) {
+      // if there is an error 
+      // send the err.response data  - with a message (msg)
+      dispatch({
+        type: LOGIN_FAIL,
+        payload: err.response.data.masg
+      })
+      
+    }
   }
 
   // logout 
   const logout = () => {
-    console.log('load user')
+    dispatch({
+      type: LOGOUT
+    })
   }
 
   // clear errors 
